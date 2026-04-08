@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffffff;
+    color: #111111;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-primary text-white font-semibold text-sm py-2.5 px-5 rounded-md hover:bg-gray-800 transition-colors duration-200;
+  }
+  .btn-whatsapp {
+    @apply bg-[#25D366] text-white font-semibold text-sm py-2.5 px-5 rounded-md hover:bg-[#1ebe5d] transition-colors duration-200;
+  }
+  .size-chip {
+    @apply border border-gray-300 text-gray-600 text-xs font-medium px-2.5 py-1 rounded cursor-pointer hover:bg-primary hover:text-white hover:border-primary transition-all duration-150;
+  }
+  .size-chip-active {
+    @apply bg-primary text-white border-primary;
+  }
+}

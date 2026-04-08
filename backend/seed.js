@@ -1,0 +1,302 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
+const Product = require('./models/Product');
+const Category = require('./models/Category');
+
+const categories = [
+  { name: 'UA Top Batch', slug: 'ua-top-batch' },
+  { name: "Women's Kick", slug: 'womens-kick' },
+  { name: "Men's Kick", slug: 'mens-kick' },
+];
+
+const products = [
+  {
+    name: 'Air Jordan 1 Retro High Tokyo Bio Hack',
+    brand: 'Nike',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'ua-top-batch',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: 'hot',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cbf58c76899.jpeg'],
+    slug: 'air-jordan-1-retro-high-tokyo-bio-hack',
+  },
+  {
+    name: 'Air Jordan 4 Retro Military Blue',
+    brand: 'Nike',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'ua-top-batch',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cbb4ae412b2.jpeg'],
+    slug: 'air-jordan-4-retro-military-blue',
+  },
+  {
+    name: 'Jordan 1 Low Bred Twist',
+    brand: 'Nike',
+    price: 2300,
+    originalPrice: 3800,
+    category: 'mens-kick',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: 'new',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cbb37937c28.jpeg'],
+    slug: 'jordan-1-low-bred-twist',
+  },
+  {
+    name: 'Air Jordan 1 Low Reverse Bred',
+    brand: 'Nike',
+    price: 2300,
+    originalPrice: 3800,
+    category: 'mens-kick',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cbb2819f308.jpeg'],
+    slug: 'air-jordan-1-low-reverse-bred',
+  },
+  {
+    name: 'Air Jordan 1 High Baroque Brown and Sail Madder Root',
+    brand: 'Nike',
+    price: 3000,
+    originalPrice: 4800,
+    category: 'ua-top-batch',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: 'hot',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cacb2a51f96.jpeg'],
+    slug: 'air-jordan-1-high-baroque-brown-sail',
+  },
+  {
+    name: 'Dunk Low Black Sail Metallic Gold',
+    brand: 'Nike',
+    price: 2800,
+    originalPrice: 4200,
+    category: 'mens-kick',
+    sizes: [41, 42, 43, 45],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69caca18a5388.jpeg'],
+    slug: 'dunk-low-black-sail-metallic-gold',
+  },
+  {
+    name: 'Dunk Stranger Things',
+    brand: 'Nike',
+    price: 3100,
+    originalPrice: 4900,
+    category: 'ua-top-batch',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: 'new',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cab6483afa6.jpeg'],
+    slug: 'dunk-stranger-things',
+  },
+  {
+    name: 'Airforce 1 Low Reigning Champion',
+    brand: 'Nike',
+    price: 2500,
+    originalPrice: 4000,
+    category: 'mens-kick',
+    sizes: [41, 42, 43, 44, 45],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cacf857e704.jpeg'],
+    slug: 'airforce-1-low-reigning-champion',
+  },
+  {
+    name: 'Samba Year of the Snake (Men)',
+    brand: 'Adidas',
+    price: 2200,
+    originalPrice: 3500,
+    category: 'mens-kick',
+    sizes: [41, 42, 43, 44, 45],
+    badge: 'new',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cab5188d3c3.jpeg'],
+    slug: 'samba-year-of-the-snake-men',
+  },
+  {
+    name: 'Samba Year of the Snake (Women)',
+    brand: 'Adidas',
+    price: 2200,
+    originalPrice: 3500,
+    category: 'womens-kick',
+    sizes: [36, 37, 38, 39, 40],
+    badge: 'new',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cab4c21b3fa.jpeg'],
+    slug: 'samba-year-of-the-snake-women',
+  },
+  {
+    name: 'Jordan 1 Retro High OG Rare Air',
+    brand: 'Nike',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'ua-top-batch',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cab356588d6.jpeg'],
+    slug: 'jordan-1-retro-high-og-rare-air',
+  },
+  {
+    name: 'Air Jordan 1 Retro Low OG Give Them Flowers',
+    brand: 'Nike',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'womens-kick',
+    sizes: [41, 42, 43, 44, 45],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cab280ab64b.jpeg'],
+    slug: 'air-jordan-1-retro-low-give-them-flowers',
+  },
+  {
+    name: 'Adidas Superstar x Spongebob Patrick Star (Men)',
+    brand: 'Adidas',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'mens-kick',
+    sizes: [41, 42, 43, 44],
+    badge: 'hot',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cab13c9bb23.jpeg'],
+    slug: 'adidas-superstar-spongebob-patrick-star-men',
+  },
+  {
+    name: 'Adidas Superstar x Spongebob Patrick Star (Women)',
+    brand: 'Adidas',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'womens-kick',
+    sizes: [39],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cab0f896681.jpeg'],
+    slug: 'adidas-superstar-spongebob-patrick-star-women',
+  },
+  {
+    name: 'Air Jordan 1 Low OG 85 Royal Semi UA',
+    brand: 'Nike',
+    price: 2500,
+    originalPrice: 4000,
+    category: 'ua-top-batch',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69ca8040cd163.jpeg'],
+    slug: 'air-jordan-1-low-og-85-royal-semi-ua',
+  },
+  {
+    name: 'Nike Dunk Low Retro Valentines (Men)',
+    brand: 'Nike',
+    price: 2300,
+    originalPrice: 3800,
+    category: 'mens-kick',
+    sizes: [41],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69ca7c4983ade.jpeg'],
+    slug: 'nike-dunk-low-retro-valentines-men',
+  },
+  {
+    name: 'Nike Dunk Low Retro Valentines Day (Women)',
+    brand: 'Nike',
+    price: 2300,
+    originalPrice: 3800,
+    category: 'womens-kick',
+    sizes: [36, 37, 38, 39, 40],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69ca7c1372920.jpeg'],
+    slug: 'nike-dunk-low-retro-valentines-women',
+  },
+  {
+    name: 'Air Jordan 1 Low Jade Smoke',
+    brand: 'Nike',
+    price: 2200,
+    originalPrice: 3800,
+    category: 'womens-kick',
+    sizes: [40, 42, 43, 44],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69989f40a255c.jpeg'],
+    slug: 'air-jordan-1-low-jade-smoke',
+  },
+  {
+    name: 'Air Jordan Low Bred Toe 2.0',
+    brand: 'Nike',
+    price: 2200,
+    originalPrice: 3800,
+    category: 'mens-kick',
+    sizes: [41, 44],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69989dc02560e.jpeg'],
+    slug: 'air-jordan-low-bred-toe-2-0',
+  },
+  {
+    name: 'Air Jordan 1 High Turbo Green',
+    brand: 'Nike',
+    price: 2500,
+    originalPrice: 4000,
+    category: 'mens-kick',
+    sizes: [41, 43, 45],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69989c3d92548.jpeg'],
+    slug: 'air-jordan-1-high-turbo-green',
+  },
+  {
+    name: 'Brown Metallic Gold',
+    brand: 'Nike',
+    price: 2700,
+    originalPrice: 4200,
+    category: 'ua-top-batch',
+    sizes: [41, 42, 43, 44, 45, 46],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cbb182a21fc.jpeg'],
+    slug: 'brown-metallic-gold',
+  },
+  {
+    name: 'Adizero White',
+    brand: 'Adidas',
+    price: 2600,
+    originalPrice: 4200,
+    category: 'mens-kick',
+    sizes: [41, 43, 45, 46],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cbaff99ee4f.jpeg'],
+    slug: 'adizero-white',
+  },
+  {
+    name: 'Adizero Black',
+    brand: 'Adidas',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'mens-kick',
+    sizes: [43, 44],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cb763a35ba8.jpeg'],
+    slug: 'adizero-black',
+  },
+  {
+    name: 'Air Jordan 1 Low Year of the Horse',
+    brand: 'Nike',
+    price: 2800,
+    originalPrice: 4500,
+    category: 'mens-kick',
+    sizes: [41, 42, 43, 44, 45],
+    badge: '',
+    images: ['https://cdn.cartpe.in/images/gallery_sm/69cac706ac43b.jpeg'],
+    slug: 'air-jordan-1-low-year-of-the-horse',
+  },
+];
+
+async function seed() {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log('✅ Connected to MongoDB Atlas');
+
+    await Product.deleteMany({});
+    await Category.deleteMany({});
+    console.log('🗑️  Cleared existing data');
+
+    await Category.insertMany(categories);
+    console.log('✅ Categories seeded');
+
+    await Product.insertMany(products);
+    console.log(`✅ ${products.length} Products seeded`);
+
+    console.log('🎉 Database seeded successfully!');
+    process.exit(0);
+  } catch (err) {
+    console.error('❌ Seed error:', err);
+    process.exit(1);
+  }
+}
+
+seed();
