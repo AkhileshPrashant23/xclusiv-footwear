@@ -18,18 +18,17 @@ function ProtectedRoute({ children }) {
 }
 
 function AdminRoute({ children }) {
-  const { user, isAdmin } = useAuth()
-  if (!user) return <Navigate to="/admin/login" replace />
-  if (!isAdmin) return <Navigate to="/" replace />
-  return children
+  const { admin } = useAuth()
+  return admin ? children : <Navigate to="/admin/login" replace />
 }
 
 export default function App() {
-  const { isAdmin } = useAuth()
+  const { admin } = useAuth()
+  const isAdminPage = window.location.pathname.startsWith('/admin')
 
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      {!isAdmin && <Navbar />}
+      {!isAdminPage && <Navbar />}
       <main className="flex-1">
         <Routes>
           <Route path="/" element={<HomePage />} />
@@ -43,7 +42,7 @@ export default function App() {
           <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
         </Routes>
       </main>
-      {!isAdmin && <Footer />}
+      {!isAdminPage && <Footer />}
     </div>
   )
 }
