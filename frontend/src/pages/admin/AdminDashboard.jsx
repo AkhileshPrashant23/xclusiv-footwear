@@ -168,7 +168,13 @@ export default function AdminDashboard() {
     }
   }
 
-  useEffect(() => { loadAll() }, [])
+  // useEffect(() => { loadAll() }, [])
+  useEffect(() => {
+  if (admin?.token) {
+    API.defaults.headers.common['Authorization'] = `Bearer ${admin.token}`
+  }
+  loadAll()
+}, [])
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this product?')) return
@@ -206,7 +212,7 @@ export default function AdminDashboard() {
       {/* Sidebar */}
       <aside className="w-56 bg-gray-900 text-white flex flex-col shrink-0 sticky top-0 h-screen">
         <div className="p-5 border-b border-gray-800">
-          <img src={logo} alt="Xclusiv" className="h-10 w-auto object-contain brightness-0 invert mb-1" />
+          <img src={logo} alt="Xclusiv" className="h-10 w-auto object-contain  " />
           <p className="text-xs text-gray-500 mt-1">Admin Panel</p>
         </div>
         <nav className="flex-1 p-3 space-y-1">
