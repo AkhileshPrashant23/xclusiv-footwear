@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import API from '../services/api'
+import { clearCartStorage } from './CartContext'
 
 const AuthContext = createContext()
 
@@ -8,22 +9,35 @@ export function AuthProvider({ children }) {
     const stored = localStorage.getItem('xclusiv_user')
     return stored ? JSON.parse(stored) : null
   })
+
+  const [admin, setAdmin] = useState(() => {
+    const stored = localStorage.getItem('xclusiv_admin')
+    return stored ? JSON.parse(stored) : null
+  })
+
   const [loading, setLoading] = useState(false)
+
+  // Set token on mount
+  useEffect(() => {
+    const token = admin?.token || user?.token
+    if (token) {
+      API.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    }
+  }, [])
 
   const saveUser = (userData) => {
     setUser(userData)
     localStorage.setItem('xclusiv_user', JSON.stringify(userData))
-    if (userData?.token) {
+    if (!admin?.token) {
       API.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`
     }
   }
 
-  // Set token on mount
-  useEffect(() => {
-    if (user?.token) {
-      API.defaults.headers.common['Authorization'] = `Bearer ${user.token}`
-    }
-  }, [])
+  const saveAdmin = (adminData) => {
+    setAdmin(adminData)
+    localStorage.setItem('xclusiv_admin', JSON.stringify(adminData))
+    API.defaults.headers.common['Authorization'] = `Bearer ${adminData.token}`
+  }
 
   const register = async (formData) => {
     setLoading(true)
@@ -55,7 +69,7 @@ export function AuthProvider({ children }) {
     setLoading(true)
     try {
       const res = await API.post('/auth/admin-login', { adminId, password })
-      saveUser(res.data.data)
+      saveAdmin(res.data.data)
       return { success: true }
     } catch (err) {
       return { success: false, message: err.response?.data?.message || 'Invalid admin credentials' }
@@ -67,11 +81,38 @@ export function AuthProvider({ children }) {
   const logout = () => {
     setUser(null)
     localStorage.removeItem('xclusiv_user')
-    delete API.defaults.headers.common['Authorization']
+    clearCartStorage()
+    if (admin?.token) {
+      API.defaults.headers.common['Authorization'] = `Bearer ${admin.token}`
+    } else {
+      delete API.defaults.headers.common['Authorization']
+    }
+  }
+
+  const adminLogout = () => {
+    setAdmin(null)
+    localStorage.removeItem('xclusiv_admin')
+    if (user?.token) {
+      API.defaults.headers.common['Authorization'] = `Bearer ${user.token}`
+    } else {
+      delete API.defaults.headers.common['Authorization']
+    }
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, register, login, adminLogin, logout, isAdmin: user?.role === 'admin' }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        admin,
+        loading,
+        register,
+        login,
+        adminLogin,
+        logout,
+        adminLogout,
+        isAdmin: !!admin,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

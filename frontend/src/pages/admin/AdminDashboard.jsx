@@ -169,9 +169,11 @@ export default function AdminDashboard() {
   }
 
   // useEffect(() => { loadAll() }, [])
-  useEffect(() => {
-  if (admin?.token) {
-    API.defaults.headers.common['Authorization'] = `Bearer ${admin.token}`
+useEffect(() => {
+  const stored = localStorage.getItem('xclusiv_admin')
+  const token = admin?.token || (stored ? JSON.parse(stored).token : null)
+  if (token) {
+    API.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
   loadAll()
 }, [])
@@ -193,7 +195,7 @@ export default function AdminDashboard() {
     } catch { toast.error('Update failed') }
   }
 
-  const handleLogout = () => { logout(); navigate('/admin/login') }
+  const handleLogout = () => { adminLogout(); navigate('/admin/login') }
 
   const filteredProducts = products.filter((p) =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
