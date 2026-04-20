@@ -145,7 +145,7 @@ function ProductForm({ initial, onSaved, onCancel }) {
 
 // ─── Main Dashboard ───────────────────────────────────────────────────────────
 export default function AdminDashboard() {
-  const { user, logout } = useAuth()
+  const { admin, adminLogout } = useAuth()
   const navigate = useNavigate()
   const [tab, setTab] = useState('Products')
   const [products, setProducts] = useState([])
