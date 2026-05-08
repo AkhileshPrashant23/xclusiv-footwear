@@ -7,9 +7,11 @@ import logo from '../../assets/logo.jpeg'
 
 const TABS = ['Products', 'Add Product', 'Orders', 'Users']
 const CATEGORIES = [
+  { label: 'All', value: 'all' },
   { label: 'UA Top Batch', value: 'ua-top-batch' },
   { label: "Women's Kick", value: 'womens-kick' },
   { label: "Men's Kick", value: 'mens-kick' },
+  { label: 'Sports', value: 'sports' },   
 ]
 const STATUS_OPTS = ['pending', 'confirmed', 'shipped', 'delivered', 'cancelled']
 const STATUS_COLORS = {

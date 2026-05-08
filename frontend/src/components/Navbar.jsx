@@ -10,6 +10,7 @@ export default function Navbar() {
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
   const [dropOpen, setDropOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   const handleLogout = () => {
     logout()
@@ -17,25 +18,50 @@ export default function Navbar() {
     setDropOpen(false)
   }
 
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      navigate(`/?search=${searchQuery.trim()}`)
+      setMenuOpen(false)
+    }
+  }
+
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+      <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+        <Link to="/" className="flex items-center shrink-0">
           <img src={logo} alt="Xclusiv Footwear" className="h-10 w-auto object-contain" />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
-          <Link to="/category/ua-top-batch" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">UA Top Batch</Link>
-          <Link to="/category/womens-kick" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">Women's Kick</Link>
-          <Link to="/category/mens-kick" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">Men's Kick</Link>
-          <Link to="/" className="text-sm font-medium text-gray-600 hover:text-black transition-colors">All Categories</Link>
+        {/* Desktop Nav */}
+        <nav className="hidden md:flex items-center gap-5">
+          <Link to="/category/ua-top-batch" className="text-sm font-medium text-gray-600 hover:text-black transition-colors whitespace-nowrap">UA Top Batch</Link>
+          <Link to="/category/womens-kick" className="text-sm font-medium text-gray-600 hover:text-black transition-colors whitespace-nowrap">Women's Kick</Link>
+          <Link to="/category/mens-kick" className="text-sm font-medium text-gray-600 hover:text-black transition-colors whitespace-nowrap">Men's Kick</Link>
+          <Link to="/category/sports" className="text-sm font-medium text-gray-600 hover:text-black transition-colors whitespace-nowrap">Sports</Link>
           {user && (
-            <Link to="/my-orders" className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center gap-1">
+            <Link to="/my-orders" className="text-sm font-medium text-gray-600 hover:text-black transition-colors flex items-center gap-1 whitespace-nowrap">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
               My Orders
             </Link>
           )}
         </nav>
+
+        {/* Desktop Search */}
+        <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xs">
+          <div className="relative w-full">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search sneakers..."
+              className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+            <svg className="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+        </form>
 
         <div className="flex items-center gap-2">
           {user ? (
@@ -84,11 +110,30 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Mobile Menu */}
       {menuOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-3 flex flex-col gap-3">
+
+          {/* Mobile Search */}
+          <form onSubmit={handleSearch} className="flex items-center">
+            <div className="relative w-full">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search sneakers..."
+                className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              />
+              <svg className="w-4 h-4 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+          </form>
+
           <Link to="/category/ua-top-batch" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-gray-700 py-1">UA Top Batch</Link>
           <Link to="/category/womens-kick" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-gray-700 py-1">Women's Kick</Link>
           <Link to="/category/mens-kick" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-gray-700 py-1">Men's Kick</Link>
+          <Link to="/category/sports" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-gray-700 py-1">Sports</Link>
           {user && <Link to="/my-orders" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-gray-700 py-1">My Orders</Link>}
           {!user && <Link to="/login" onClick={() => setMenuOpen(false)} className="text-sm font-medium text-gray-700 py-1">Login / Sign Up</Link>}
           {user && <button onClick={handleLogout} className="text-sm font-medium text-red-500 py-1 text-left">Logout</button>}

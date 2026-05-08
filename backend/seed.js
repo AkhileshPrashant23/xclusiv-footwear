@@ -7,6 +7,7 @@ const categories = [
   { name: 'UA Top Batch', slug: 'ua-top-batch' },
   { name: "Women's Kick", slug: 'womens-kick' },
   { name: "Men's Kick", slug: 'mens-kick' },
+  { name: 'Sports', slug: 'sports' },
 ];
 
 const products = [

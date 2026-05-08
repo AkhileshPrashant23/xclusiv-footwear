@@ -7,6 +7,7 @@ const CATEGORY_NAMES = {
   'ua-top-batch': 'UA Top Batch',
   'womens-kick': "Women's Kick",
   'mens-kick': "Men's Kick",
+  'sports': 'Sports',          // ← ADD THIS
 }
 
 export default function CategoryPage() {
